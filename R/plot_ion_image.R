@@ -4,7 +4,7 @@
 #' @param target_mz Numeric, the target m/z to visualize
 #' @param tol Numeric, tolerance for visualization around target m/z
 #' @param units Character, defines units for tolerance `tol` either "mz" or "ppm"
-#' @param flip_y Boolean, Whether the y-axis should be flipped to match normal Cardinal plotting
+#' @param flip_y Logical, Whether the y-axis should be flipped to match normal Cardinal plotting
 #' @return A ggplot object
 #' @export
 plot_ion_image <- function(mse, target_mz, tol = 0.1, units = c("mz", "ppm"),
@@ -22,7 +22,7 @@ plot_ion_image <- function(mse, target_mz, tol = 0.1, units = c("mz", "ppm"),
     tol_mz <- tol
   }
 
-  fid <- cardinal::features(mse, target_mz - tol_mz < mz, mz < target_mz + tol_mz)
+  fid <- Cardinal::features(mse, target_mz - tol_mz < mz, mz < target_mz + tol_mz)
 
   if (length(fid) == 0) {
     stop("No features found within tolerance of target_mz = ", target_mz)
@@ -30,14 +30,14 @@ plot_ion_image <- function(mse, target_mz, tol = 0.1, units = c("mz", "ppm"),
 
   ## Sum intensity across matched features per pixel
   if (length(fid) == 1) {
-    ion_intensity <- cardinal::spectra(mse)[fid, ]
+    ion_intensity <- Cardinal::spectra(mse)[fid, ]
   } else {
-    ion_intensity <- colSums(cardinal::spectra(mse)[fid, , drop = FALSE])
+    ion_intensity <- colSums(Cardinal::spectra(mse)[fid, , drop = FALSE])
   }
 
   ## Build data frame with coordinates
   df <- data.frame(
-    cardinal::coord(mse),
+    Cardinal::coord(mse),
     intensity = ion_intensity
   )
 

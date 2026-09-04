@@ -16,21 +16,21 @@ plot_spectrum <- function(mse, center_mz, mz_range = 5,
   mse_name <- deparse(substitute(mse))
 
   ## Find the feature index closest to center_mz
-  center_idx <- cardinal::features(mse, mz = center_mz)
+  center_idx <- Cardinal::features(mse, mz = center_mz)
 
   ## Pick the pixel/spectrum with the highest intensity there
-  center_intensities <- cardinal::spectra(mse)[center_idx, ]
+  center_intensities <- Cardinal::spectra(mse)[center_idx, ]
   best_pixel <- which.max(center_intensities)
 
   ## Extract the mz window around center for that spectrum
   mz_lo <- center_mz - mz_range
   mz_hi <- center_mz + mz_range
 
-  fid_range <- cardinal::features(mse, mz_lo < mz, mz < mz_hi)
+  fid_range <- Cardinal::features(mse, mz_lo < mz, mz < mz_hi)
 
   df <- data.frame(
-    mz = cardinal::mz(mse)[fid_range],
-    intensity = cardinal::spectra(mse)[fid_range, best_pixel]
+    mz = Cardinal::mz(mse)[fid_range],
+    intensity = Cardinal::spectra(mse)[fid_range, best_pixel]
   )
 
   ## Find candidate peaks to label: local maxima, collapsing plateaus
