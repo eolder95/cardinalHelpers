@@ -22,7 +22,10 @@ plot_ion_image <- function(mse, target_mz, tol = 0.1, units = c("mz", "ppm"),
     tol_mz <- tol
   }
 
-  fid <- Cardinal::features(mse, target_mz - tol_mz < mz, mz < target_mz + tol_mz)
+  lo_mz <- target_mz - tol_mz
+  hi_mz <- target_mz + tol_mz
+
+  fid <- Cardinal::features(mse, lo_mz < mz, mz < hi_mz)
 
   if (length(fid) == 0) {
     stop("No features found within tolerance of target_mz = ", target_mz)
@@ -43,12 +46,13 @@ plot_ion_image <- function(mse, target_mz, tol = 0.1, units = c("mz", "ppm"),
 
   ## Plot
   p <- ggplot2::ggplot(df, aes(x = x, y = y, fill = intensity)) +
-    ggplot2::geom_raster() +
-    ggplot2::scale_fill_viridis_c() +
+    ggplot2::geom_tile() +
+    ggplot2::scale_fill_viridis_c(option = "inferno") +
     ggplot2::coord_fixed() +
     ggplot2::labs(
       title = paste0(mse_name, " - ", round(target_mz, 4), " *m/z* ",
-                     "\u00B1", tol, if (units == "ppm") " ppm" else "Da"),
+                     "\u00B1 ", tol, if (units == "ppm") " ppm" else "Da",
+                     " (", round(lo_mz, 4), " - ", round(hi_mz, 4), ")"),
       fill = "Intensity", x = "x", y = "y"
     ) +
     ggplot2::theme_minimal() +
