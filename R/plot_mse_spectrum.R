@@ -8,7 +8,7 @@
 #' @param plateau_tol Numeric, relative intensity threshold for grouping flat regions
 #' @return A ggplot object
 #' @export
-plot_spectrum <- function(mse, center_mz, mz_range = 5,
+plot_mse_spectrum <- function(mse, center_mz, mz_range = 5,
                           n_labels = 5, label_tol = 0.5,
                           plateau_tol = 0.001) {
 
