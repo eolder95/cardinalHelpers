@@ -47,11 +47,14 @@ plot_ion_image <- function(mse, target_mz, tol = 0.1, units = c("mz", "ppm"),
     ggplot2::scale_fill_viridis_c() +
     ggplot2::coord_fixed() +
     ggplot2::labs(
-      title = paste0(mse_name, " — m/z ", round(target_mz, 3),
-                     " (\u00B1", tol, if (units == "ppm") " ppm" else "", ")"),
+      title = paste0(mse_name, " - ", round(target_mz, 4), " *m/z* ",
+                     "\u00B1", tol, if (units == "ppm") " ppm" else "Da"),
       fill = "Intensity", x = "x", y = "y"
     ) +
-    ggplot2::theme_minimal()
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
+      plot.title = ggtext::element_markdown()
+    )
 
   if (flip_y) {
     p <- p + ggplot2::scale_y_reverse()

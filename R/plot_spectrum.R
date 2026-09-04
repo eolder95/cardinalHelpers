@@ -61,10 +61,13 @@ plot_spectrum <- function(mse, center_mz, mz_range = 5,
                     aes(x = mz, y = intensity, label = round(mz, 4)),
                     color = "red", size = 3, max.overlaps = Inf) +
     ggplot2::labs(
-      title = paste0(mse_name, " - spectrum ", best_pixel, " (highest intensity at m/z ", round(center_mz, 4), ")"),
+      title = paste0(mse_name, " - spectrum ", best_pixel, " (highest intensity at *m/z* ", round(center_mz, 4), ")"),
       x = "m/z", y = "Intensity"
     ) +
-    ggplot2::theme_minimal()
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
+      plot.title = ggtext::element_markdown()
+    )
 
   return(p)
 }

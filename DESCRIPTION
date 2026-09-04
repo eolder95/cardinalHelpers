@@ -4,14 +4,14 @@ Version: 0.0.0.9000
 Authors@R: 
     person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Imports: 
     Cardinal,
     ggplot2,
-    ggrepel
+    ggrepel,
+    ggtext
 Config/roxygen2/version: 8.1.0
 URL: https://github.com/eolder95/cardinalHelpers
 BugReports: https://github.com/eolder95/cardinalHelpers/issues
