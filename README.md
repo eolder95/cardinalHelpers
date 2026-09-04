@@ -12,7 +12,7 @@ To add functions follow this workflow:
 6. Commit and push to GitHub using the RStudio Git pane
 7. Confirm the push is live by installing the package from GitHub:
   ```
-  devtools::install_github("eolder95/cardinalHelpers")
+  pak::pak("eolder95/cardinalHelpers")
   library(cardinalHelpers)
   <test new function>
   ```
