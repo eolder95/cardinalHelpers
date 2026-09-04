@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_spectrum.R
 \name{plot_spectrum}
 \alias{plot_spectrum}
-\title{Plot a labeled spectrum around a target m/z}
+\title{Plot a labeled spectrum around a target m/z using ggplot2}
 \usage{
 plot_spectrum(
   mse,
@@ -30,5 +30,5 @@ plot_spectrum(
 A ggplot object
 }
 \description{
-Plot a labeled spectrum around a target m/z
+Plot a labeled spectrum around a target m/z using ggplot2
 }
