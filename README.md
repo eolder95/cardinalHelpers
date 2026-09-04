@@ -2,6 +2,15 @@
 
 This is a collection of helper functions developed to standardize MSI analysis across multiple datasets.
 
+To install these functions in your RStudio environment:
+
+1. In Rstudio, use `install.packages("remotes")` to install dependency packages.
+2. Install the package from GitHub:
+  ```
+  pak::pak("eolder95/cardinalHelpers")
+  library(cardinalHelpers)
+  ```
+   
 To add functions follow this workflow:
 
 1. In RStudio, open the `cardinalHelpers` project.
