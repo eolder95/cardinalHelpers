@@ -8,65 +8,60 @@
 #' @return A ggplot object
 #' @export
 plot_ion_image_interactive <- function(mse, target_mz, tol = 0.1, units = c("mz", "ppm"),
-                           flip_y = TRUE) {
+                                       palette = c("viridis", "magma", "inferno", "plasma",
+                                                   "cividis", "rocket", "mako", "turbo"),
+                                       bg = c("white", "black"), flip_y = TRUE) {
 
   units <- match.arg(units)
+  palette <- match.arg(palette)
+  bg <- match.arg(bg)
 
-  ## capture object name for title, before any manipulation
   mse_name <- deparse(substitute(mse))
+  text_color <- if (bg == "black") "white" else "black"
 
-  ## Find feature indices within tolerance of target_mz
-  if (units == "ppm") {
-    tol_mz <- target_mz * tol * 1e-6
-  } else {
-    tol_mz <- tol
-  }
-
+  # --- feature matching ---
+  tol_mz <- if (units == "ppm") target_mz * tol * 1e-6 else tol
   lo_mz <- target_mz - tol_mz
   hi_mz <- target_mz + tol_mz
 
   fid <- Cardinal::features(mse, lo_mz < mz, mz < hi_mz)
-
   if (length(fid) == 0) {
     stop("No features found within tolerance of target_mz = ", target_mz)
   }
 
-  ## Sum intensity across matched features per pixel
-  if (length(fid) == 1) {
-    ion_intensity <- Cardinal::spectra(mse)[fid, ]
+  ion_intensity <- if (length(fid) == 1) {
+    Cardinal::spectra(mse)[fid, ]
   } else {
-    ion_intensity <- colSums(Cardinal::spectra(mse)[fid, , drop = FALSE])
+    colSums(Cardinal::spectra(mse)[fid, , drop = FALSE])
   }
 
-  ## Build data frame with coordinates
-  df <- data.frame(
-    Cardinal::coord(mse),
-    intensity = ion_intensity
-  )
+  df <- data.frame(Cardinal::coord(mse), intensity = ion_intensity)
 
-  ## Plot
-  p <- ggplot2::ggplot(df, aes(x = x, y = y, fill = intensity,
-                               text = paste0("x: ", x, "<br>y: ", y,
-                                             "<br>Intensity: ", round(intensity, 1)))) +
-    ggplot2::geom_tile() +
-    ggplot2::scale_fill_viridis_c(option = "inferno") +
-    ggplot2::coord_fixed() +
-    ggplot2::labs(
-      title = paste0(mse_name, " - ", round(target_mz, 4), " *m/z* ",
-                     "\u00B1 ", tol, if (units == "ppm") " ppm" else "Da",
-                     " (", round(lo_mz, 4), " - ", round(hi_mz, 4), ")"),
-      fill = "Intensity", x = "x", y = "y"
-    ) +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(
-      plot.title = ggtext::element_markdown()
-    )
+  # --- color palette ---
+  pal_colors <- viridisLite::viridis(256, option = palette)
 
-  if (flip_y) {
-    p <- p + ggplot2::scale_y_reverse()
-  }
-
-  plotly::ggplotly(p, tooltip = "text")
-
-  return(p)
+  # --- plot ---
+  plotly::plot_ly(
+    df, x = ~x, y = ~y, z = ~intensity,
+    type = "heatmap",
+    colors = pal_colors,
+    hovertemplate = "x: %{x}<br>y: %{y}<br>Intensity: %{z:.1f}<extra></extra>"
+  ) |>
+    plotly::layout(
+      title = list(
+        text = paste0(mse_name, " - ", round(target_mz, 4), " <i>m/z</i> ",
+                      "\u00B1", tol, if (units == "ppm") " ppm" else " Da"),
+        font = list(color = text_color)
+      ),
+      paper_bgcolor = bg,
+      plot_bgcolor = bg,
+      font = list(color = text_color),
+      xaxis = list(title = "x", showgrid = FALSE, zeroline = FALSE,
+                   range = range(df$x), color = text_color),
+      yaxis = list(title = "y", showgrid = FALSE, zeroline = FALSE, autorange = if (flip_y) "reversed" else TRUE,
+                   range = range(df$y), color = text_color)
+    ) |>
+    plotly::colorbar(title = "Intensity",
+                     tickfont = list(color = text_color),
+                     titlefont = list(color = text_color))
 }
