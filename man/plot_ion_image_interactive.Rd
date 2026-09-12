@@ -11,7 +11,8 @@ plot_ion_image_interactive(
   units = c("mz", "ppm"),
   palette = c("viridis", "magma", "inferno", "plasma", "cividis", "rocket", "mako",
     "turbo"),
-  bg = c("white", "black")
+  bg = c("white", "black"),
+  flip_y = TRUE
 )
 }
 \arguments{

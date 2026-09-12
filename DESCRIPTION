@@ -12,6 +12,7 @@ Imports:
     ggplot2,
     ggrepel,
     ggtext,
+    igraph,
     plotly,
     viridisLite
 Config/roxygen2/version: 8.1.0
