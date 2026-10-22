@@ -10,7 +10,8 @@
 #' @export
 plot_mse_spectrum <- function(mse, center_mz, mz_range = 5,
                           n_labels = 5, label_tol = 0.5,
-                          plateau_tol = 0.001) {
+                          plateau_tol = 0.001,
+                          summary_col = NULL) {
 
   ## Capture the name of the object as passed in, before any manipulation
   mse_name <- deparse(substitute(mse))
@@ -28,9 +29,28 @@ plot_mse_spectrum <- function(mse, center_mz, mz_range = 5,
 
   fid_range <- Cardinal::features(mse, mz_lo < mz, mz < mz_hi)
 
+  ## Choose y values, if using summary column use summary
+  if (is.null(summary_col)) {
+    center_idx <- Cardinal::features(mse, mz = center_mz)
+    best_pixel <- which.max(Cardinal::spectra(mse)[center_idx, ])
+    y_vals <- Cardinal::spectra(mse)[fid_range, best_pixel]
+    title_txt <- paste0(mse_name, " \u2014 spectrum ", best_pixel,
+                        " (highest intensity at m/z ", round(center_mz, 2), ")")
+    y_lab <- "Intensity"
+  } else {
+    fd <- Cardinal::featureData(mse)
+    if (!summary_col %in% names(fd)) {
+      stop("'", summary_col, "' not found in featureData(mse). Available columns: ",
+           paste(names(fd), collapse = ", "))
+    }
+    y_vals <- fd[[summary_col]][fid_range]
+    title_txt <- paste0(mse_name, " \u2014 ", summary_col, " spectrum")
+    y_lab <- summary_col
+  }
+
   df <- data.frame(
     mz = Cardinal::mz(mse)[fid_range],
-    intensity = Cardinal::spectra(mse)[fid_range, best_pixel]
+    intensity = y_vals
   )
 
   ## Find candidate peaks to label: local maxima, collapsing plateaus

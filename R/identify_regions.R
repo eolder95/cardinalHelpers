@@ -51,3 +51,8 @@ identify_regions <- function(mse, gap = 1, connectivity = 8, min_size = 1) {
 
   factor(region_label)
 }
+
+
+
+
+### NOTE #### Add factor re-naming using forcats, given a vector containing region names in order
