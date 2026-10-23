@@ -28,7 +28,7 @@ segment_colony_agar <- function(mse, region_col = "region", r = 1, k = 2, s = 0,
 
     set.seed(1)
     ssc <- spatialShrunkenCentroids(mse_roi, r = r, k = k, s = s)
-    classes <- ssc[[1]]$class
+    classes <- ssc$class
 
     if (auto_label) {
       # use total ion current to decide which class is colony (higher signal) vs agar (lower)
