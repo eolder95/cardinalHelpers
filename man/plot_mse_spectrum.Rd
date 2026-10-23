@@ -10,7 +10,8 @@ plot_mse_spectrum(
   mz_range = 5,
   n_labels = 5,
   label_tol = 0.5,
-  plateau_tol = 0.001
+  plateau_tol = 0.001,
+  summary_col = NULL
 )
 }
 \arguments{
