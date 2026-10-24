@@ -27,7 +27,7 @@ segment_colony_agar <- function(mse, region_col = "region", r = 1, k = 2, s = 0,
     mse_roi <- mse[, idx]
 
     set.seed(1)
-    ssc <- spatialShrunkenCentroids(mse_roi, r = r, k = k, s = s)
+    ssc <- spatialShrunkenCentroids(mse_roi, r = r, k = k, s = s, weights = "adaptive")
     classes <- ssc$class
 
     if (auto_label) {
